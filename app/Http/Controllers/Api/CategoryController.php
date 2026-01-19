@@ -15,7 +15,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories =  Category::all();
+        // $categories =  Category::all();
+        // $categories =  Category::withAvg('books' , 'price')->get();
+        $categories =  Category::withCount('books')->get();
        return ResponseHelper::success(' جميع الأصناف',$categories);
     }
 
@@ -79,13 +81,15 @@ class CategoryController extends Controller
     return ResponseHelper::success("تم تعديل الصنف", $category);
 }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
 {
     $category = Category::findOrFail($id);
+
+    if ($category->books()->count() > 0) {
+        return ResponseHelper::failed(
+            'لا يمكن حذف الصنف لأنه مرتبط بكتب'
+        );
+    }
 
     if ($category->image) {
         Storage::delete('category-images/' . $category->image);
@@ -95,5 +99,6 @@ class CategoryController extends Controller
 
     return ResponseHelper::success("تم حذف الصنف", $category);
 }
+
 
 }

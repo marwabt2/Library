@@ -16,8 +16,6 @@ class StoreBookRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -27,11 +25,19 @@ class StoreBookRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'mortgage' => 'required|numeric|min:0',
             'authorship_date' => 'nullable|date',
+
             'category_id' => 'required|exists:categories,id',
+
             'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp',
+
+            'authors' => 'nullable|array',
+            'authors.*' => 'exists:authors,id',
         ];
     }
 
+    /**
+     * Custom validation messages
+     */
     public function messages(): array
     {
         return [
@@ -44,14 +50,19 @@ class StoreBookRequest extends FormRequest
 
             'price.required' => 'سعر الكتاب مطلوب',
             'price.numeric' => 'سعر الكتاب يجب أن يكون رقم',
+            'price.min' => 'سعر الكتاب لا يمكن أن يكون سالباً',
 
             'mortgage.required' => 'قيمة الرهن مطلوبة',
             'mortgage.numeric' => 'قيمة الرهن يجب أن تكون رقم',
+            'mortgage.min' => 'قيمة الرهن لا يمكن أن تكون سالبة',
 
             'authorship_date.date' => 'تاريخ التأليف غير صحيح',
 
             'category_id.required' => 'التصنيف مطلوب',
             'category_id.exists' => 'التصنيف غير موجود',
+
+            'authors.array' => 'المؤلفون يجب أن يكونوا ضمن مصفوفة',
+            'authors.*.exists' => 'أحد المؤلفين غير موجود',
 
             'cover.image' => 'الملف يجب أن يكون صورة',
             'cover.mimes' => 'الصورة يجب أن تكون بصيغة jpg أو jpeg أو png أو webp',

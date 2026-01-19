@@ -13,13 +13,6 @@ class AuthorSeeder extends Seeder
      */
     public function run(): void
     {
-            $authors = [
-            ['name' => 'محمود درويش'],
-            ['name' => 'نجيب محفوظ'],
-            ['name' => 'جبران خليل جبران'],
-            ['name' => 'ويليام شكسبير'],
-            ['name' => 'أجاها كريستي'],
-        ];
-        Author::insert($authors);
+        Author::factory(10)->create();
     }
 }
